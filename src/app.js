@@ -11,12 +11,9 @@ const app = express();
 // MIDDLEWARES GLOBAUX
 // ========================
 app.use(helmet());
-app.use(cors(corsConfig));
-app.options('*', cors(corsConfig)); // IMPORTANT pour POST
+app.use(cors(corsConfig)); // ✅ suffit largement
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
-
-// Rate limit (DEV safe)
 app.use(rateLimit(rateLimitConfig));
 
 // ========================
