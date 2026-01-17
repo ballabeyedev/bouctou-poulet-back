@@ -2,20 +2,16 @@ require('dotenv').config();
 const sequelize = require('./config/db');
 const app = require('./app');
 
-// Modèles
-const User = require('./models/utilisateur.model');
-
 (async () => {
   try {
-    // Synchronisation DB
-    await sequelize.sync({ alter: true });
-    console.log('✅ Base synchronisée avec succès');
+    await sequelize.sync(); // ⚠️ PAS alter en prod
+    console.log('✅ Base de données synchronisée');
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, '0.0.0.0', () => {
-      console.log(`🚀 Serveur lancé sur le port ${PORT}`);
+      console.log(`🚀 Serveur démarré sur le port ${PORT}`);
     });
-  } catch (err) {
-    console.error('❌ Erreur lors de la synchronisation de la base :', err);
+  } catch (error) {
+    console.error('❌ Erreur serveur :', error);
   }
 })();

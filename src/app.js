@@ -7,26 +7,37 @@ const { corsConfig, rateLimitConfig } = require('./config/security');
 
 const app = express();
 
-// Middlewares globaux
+// ========================
+// MIDDLEWARES GLOBAUX
+// ========================
 app.use(helmet());
 app.use(cors(corsConfig));
+app.options('*', cors(corsConfig)); // IMPORTANT pour POST
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Rate limit (DEV safe)
 app.use(rateLimit(rateLimitConfig));
 
-
-// Routes
-const authRoutes = require('./routes/auth.route');
-const produitRoutes = require('./routes/admin/produit/produit.route');
-const listeProduitClientRoutes = require('./routes/listeproduitclient.route');
-
-
-// Serveur fichiers statiques pour les uploads
+// ========================
+// STATIC FILES
+// ========================
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Définition des routes
-app.use('/bouctou_poulet/auth', authRoutes);
-app.use('/bouctou_poulet/admin', produitRoutes);
-app.use('/bouctou_poulet/client', listeProduitClientRoutes);
+// ========================
+// ROUTES
+// ========================
+app.use('/bouctou_poulet/auth', require('./routes/auth.route'));
+app.use('/bouctou_poulet/admin', require('./routes/admin/produit/produit.route'));
+app.use('/bouctou_poulet/client', require('./routes/listeproduitclient.route'));
+
+// ========================
+// DEBUG DEV
+// ========================
+app.use((req, res, next) => {
+  console.log(`➡️ ${req.method} ${req.originalUrl}`);
+  console.log('BODY :', req.body);
+  next();
+});
 
 module.exports = app;

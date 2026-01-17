@@ -1,65 +1,99 @@
 require('dotenv').config();
 
 /**
- * Configuration JWT
+ * =========================
+ * JWT
+ * =========================
  */
 const jwtConfig = {
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_SECRET || 'dev_secret',
   expiresIn: process.env.JWT_EXPIRES_IN || '1h',
-  refreshSecret: process.env.JWT_REFRESH_SECRET,
-  refreshExpiresIn: '7d'
+  refreshSecret: process.env.JWT_REFRESH_SECRET || 'dev_refresh_secret',
+  refreshExpiresIn: '7d',
 };
 
 /**
- * Configuration Bcrypt
+ * =========================
+ * BCRYPT
+ * =========================
  */
 const bcryptConfig = {
-  saltRounds: 12
+  saltRounds: 12,
 };
 
 /**
- * Rate Limiting (anti brute force)
+ * =========================
+ * RATE LIMIT (DEV)
+ * =========================
+ * ⚠️ Souple en développement
  */
 const rateLimitConfig = {
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requêtes / IP
+  windowMs: 15 * 60 * 1000,
+  max: 1000, // LARGE en dev
   standardHeaders: true,
-  legacyHeaders: false
+  legacyHeaders: false,
 };
 
 /**
- * CORS sécurisé
+ * =========================
+ * CORS (DEV SAFE)
+ * =========================
  */
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',')
+  : ['http://localhost:5173'];
+
 const corsConfig = {
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: (origin, callback) => {
+    // Autorise Postman, curl, serveur
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    console.log('❌ CORS bloqué pour :', origin);
+    return callback(null, false); // DEV → pas d’erreur bloquante
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
 };
 
 /**
- * Cookies (si refresh token)
+ * =========================
+ * COOKIES
+ * =========================
  */
 const cookieConfig = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'strict'
+  secure: false, // DEV
+  sameSite: 'lax',
 };
 
 /**
- * Upload fichiers (PDF / Signature)
+ * =========================
+ * UPLOAD
+ * =========================
  */
 const uploadConfig = {
-  maxFileSize: 5 * 1024 * 1024, // 5 MB
-  allowedMimeTypes: ['application/pdf', 'image/png', 'image/jpeg', 'image/webp']
+  maxFileSize: 5 * 1024 * 1024,
+  allowedMimeTypes: [
+    'application/pdf',
+    'image/png',
+    'image/jpeg',
+    'image/webp',
+  ],
 };
 
 /**
- * Chiffrement & Hash
+ * =========================
+ * CRYPTO
+ * =========================
  */
 const cryptoConfig = {
   hashAlgorithm: 'sha256',
-  encoding: 'hex'
+  encoding: 'hex',
 };
 
 module.exports = {
@@ -69,5 +103,5 @@ module.exports = {
   corsConfig,
   cookieConfig,
   uploadConfig,
-  cryptoConfig
+  cryptoConfig,
 };
