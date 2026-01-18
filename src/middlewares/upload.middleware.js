@@ -7,7 +7,7 @@ const { uploadConfig } = require('../config/security');
 // Ici on définit où seront stockés les fichiers et comment les renommer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, '../uploads/image_profils');
+    const uploadPath = path.join(__dirname, '../uploads');
 
     // Crée le dossier uploads s'il n'existe pas
     if (!fs.existsSync(uploadPath)) {
