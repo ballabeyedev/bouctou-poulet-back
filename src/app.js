@@ -27,7 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/bouctou_poulet/auth', require('./routes/auth.route'));
 app.use('/bouctou_poulet/admin', require('./routes/admin/produit/produit.route'));
 app.use('/bouctou_poulet/client', require('./routes/listeproduitclient.route'));
-app.use('/bouctou_poulet/client/produit', require('./routes/client/commende.route'));
+app.use('/bouctou_poulet/commende', require('./routes/client/commende.route'));
 
 // ========================
 // DEBUG DEV
