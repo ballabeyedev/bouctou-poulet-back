@@ -22,20 +22,22 @@ app.use(rateLimit(rateLimitConfig));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ========================
-// ROUTES
-// ========================
-app.use('/bouctou_poulet/auth', require('./routes/auth.route'));
-app.use('/bouctou_poulet/admin', require('./routes/admin/produit/produit.route'));
-app.use('/bouctou_poulet/client', require('./routes/listeproduitclient.route'));
-app.use('/bouctou_poulet/commende', require('./routes/client/commende.route'));
-
-// ========================
-// DEBUG DEV
+// DEBUG DEV (mettre AVANT les routes pour voir les logs)
 // ========================
 app.use((req, res, next) => {
   console.log(`➡️ ${req.method} ${req.originalUrl}`);
   console.log('BODY :', req.body);
   next();
 });
+
+// ========================
+// ROUTES
+// ========================
+app.use('/bouctou_poulet/auth', require('./routes/auth.route'));
+app.use('/bouctou_poulet/admin', require('./routes/admin/produit/produit.route'));
+app.use('/bouctou_poulet/client', require('./routes/listeproduitclient.route'));
+
+// CORRECTION : Ajouter le préfixe "client" pour les commandes
+app.use('/bouctou_poulet/client/commende', require('./routes/client/commende.route'));
 
 module.exports = app;
