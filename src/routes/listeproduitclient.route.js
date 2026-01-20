@@ -8,5 +8,11 @@ router.get(
   listeproduitClientController.listerProduitsClient
 );
 
+// Commander un produit
+router.post(
+  '/commander-produit-client',
+  listeproduitClientController.commenderProduitsClient
+);
+
 
 module.exports = router;
