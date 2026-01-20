@@ -37,7 +37,5 @@ app.use('/bouctou_poulet/auth', require('./routes/auth.route'));
 app.use('/bouctou_poulet/admin', require('./routes/admin/produit/produit.route'));
 app.use('/bouctou_poulet/client', require('./routes/listeproduitclient.route'));
 
-// CORRECTION : Ajouter le préfixe "client" pour les commandes
-app.use('/bouctou_poulet/client/commende', require('./routes/client/commende.route'));
 
 module.exports = app;
