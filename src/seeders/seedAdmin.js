@@ -3,13 +3,15 @@ const User = require('../models/utilisateur.model');
 
 async function seedAdmin() {
   try {
-    // 🔍 Vérifier si un admin existe déjà
+    const adminEmail = 'ot218053@gmail.com';
+
+    // 🔍 Vérifier si l'admin existe déjà PAR EMAIL
     const adminExiste = await User.findOne({
-      where: { role: 'Admin' }
+      where: { email: adminEmail }
     });
 
     if (adminExiste) {
-      console.log('ℹ️ Admin déjà existant, seed ignoré');
+      console.log('ℹ️ Admin déjà existant (email trouvé), seed ignoré');
       return;
     }
 
@@ -20,7 +22,7 @@ async function seedAdmin() {
     await User.create({
       nom: 'TOURE',
       prenom: 'Oumar',
-      email: 'ot218053@gmail.com',
+      email: adminEmail,
       mot_de_passe: passwordHash,
       adresse: 'Mali, Bamako',
       telephone: '+22391178664',
