@@ -2,7 +2,7 @@ const ProduitServiceClient = require('../services/listeproduitclient.service');
 
 // -------------------- LISTER LES PRODUITS --------------------
 exports.listerProduitsClient = async (req, res) => {
-  const { statut } = req.query; // optionnel : ?statut=actif
+  const { statut } = req.query;
 
   try {
     const produits = await ProduitServiceClient.listerProduitsClient({ statut });
@@ -16,28 +16,54 @@ exports.listerProduitsClient = async (req, res) => {
   }
 };
 
-// -------------------- COMMENDER UN PRODUIT --------------------
+// -------------------- LISTER TOUTES LES COMMANDES --------------------
+exports.listerToutesLesCommendes = async (req, res) => {
+  try {
+    const { statut } = req.query; // optionnel : ?statut=en_attente
+
+    const result = await ProduitServiceClient.listerToutesLesCommendes({ statut });
+
+    if (!result.success) {
+      return res.status(500).json({
+        success: false,
+        message: result.message
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: result.data
+    });
+
+  } catch (error) {
+    console.error('Erreur liste commandes:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la récupération des commandes',
+      erreur: error.message
+    });
+  }
+};
+
+// -------------------- COMMANDER UN PRODUIT --------------------
 exports.commenderProduitsClient = async (req, res) => {
   try {
     const { idProduit, quantite, nomComplet, telephone, adresse } = req.body;
-    
-    // Validation des données requises
+
     if (!idProduit || !quantite || !nomComplet || !telephone || !adresse) {
       return res.status(400).json({
         success: false,
         message: 'Tous les champs sont obligatoires: idProduit, quantite, nomComplet, telephone, adresse'
       });
     }
-    
-    // Validation de la quantité
+
     if (quantite <= 0 || !Number.isInteger(quantite)) {
       return res.status(400).json({
         success: false,
         message: 'La quantité doit être un nombre entier positif'
       });
     }
-    
-    // Validation du téléphone
+
     const phoneRegex = /^(\+223|0)[0-9]{8}$/;
     if (!phoneRegex.test(telephone.replace(/\s/g, ''))) {
       return res.status(400).json({
@@ -45,7 +71,7 @@ exports.commenderProduitsClient = async (req, res) => {
         message: 'Numéro de téléphone malien invalide. Format: +223XXXXXXXX ou 0XXXXXXXX'
       });
     }
-    
+
     const result = await ProduitServiceClient.commanderProduit({
       idProduit,
       quantite,
@@ -53,20 +79,20 @@ exports.commenderProduitsClient = async (req, res) => {
       telephone,
       adresse
     });
-    
+
     if (result.success) {
       return res.status(201).json({
         success: true,
         message: 'Commande créée avec succès',
         data: result.commande
       });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: result.message
-      });
     }
-    
+
+    return res.status(400).json({
+      success: false,
+      message: result.message
+    });
+
   } catch (error) {
     console.error('Erreur dans commenderProduitsClient:', error);
     return res.status(500).json({

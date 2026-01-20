@@ -14,5 +14,10 @@ router.post(
   listeproduitClientController.commenderProduitsClient
 );
 
+router.get(
+  '/liste-commendes-client',
+  listeproduitClientController.listerToutesLesCommendes
+);
+
 
 module.exports = router;

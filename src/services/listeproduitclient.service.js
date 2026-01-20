@@ -76,6 +76,44 @@ class ProduitServiceClient {
         };
       }
     }
+
+// -------------------- AFFICHER TOUTES LES COMMANDES --------------------
+static async listerToutesLesCommendes({ statut } = {}) {
+  try {
+    const whereClause = statut ? { statut } : {};
+
+    const commandes = await Commende.findAll({
+      where: whereClause,
+
+      // ❌ ne pas mettre attributes ici
+      // 👉 toutes les colonnes seront retournées automatiquement
+
+      include: [
+        {
+          model: Produit,
+          as: 'produit',
+          attributes: ['id', 'nom', 'prix', 'type', 'description']
+        }
+      ],
+
+      order: [['dateCommande', 'DESC']]
+    });
+
+    return {
+      success: true,
+      data: commandes
+    };
+
+  } catch (error) {
+    console.error('Erreur lors de la récupération des commandes:', error);
+    return {
+      success: false,
+      message: 'Erreur lors de la récupération des commandes'
+    };
+  }
+}
+
+
 }
 
 module.exports = ProduitServiceClient;
