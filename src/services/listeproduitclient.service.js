@@ -1,5 +1,7 @@
 const Produit = require('../models/produit.model');
 const sequelize = require('../config/db');
+const Commende = require('../models/commende.model');
+
 
 class ProduitServiceClient {
   // -------------------- LISTER TOUS LES PRODUITS --------------------
