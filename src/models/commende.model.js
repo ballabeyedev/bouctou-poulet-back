@@ -57,7 +57,18 @@ const Commende = sequelize.define(
 
 // Relation avec Produit
 const Produit = require('./produit.model');
-Commende.belongsTo(Produit, { foreignKey: 'idProduit', as: 'produit' });
-Produit.hasMany(Commende, { foreignKey: 'idProduit', as: 'commandes' });
+Commende.belongsTo(Produit, {
+  foreignKey: 'idProduit',
+  as: 'produit',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+
+Produit.hasMany(Commende, {
+  foreignKey: 'idProduit',
+  as: 'commandes',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
 
 module.exports = Commende;
