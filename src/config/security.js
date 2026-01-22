@@ -39,9 +39,22 @@ const rateLimitConfig = {
  * CORS (DEV SAFE)
  * =========================
  */
+/**
+ * =========================
+ * CORS (DEV SAFE)
+ * =========================
+ */
+/**
+ * =========================
+ * CORS (DEV SAFE)
+ * =========================
+ */
 const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',')
-  : ['http://localhost:5173'];
+  : [
+      'http://localhost:5173', // local dev
+      'https://bouctou-poulet-frontend.vercel.app' // frontend Vercel
+    ];
 
 const corsConfig = {
   origin: (origin, callback) => {
@@ -59,6 +72,7 @@ const corsConfig = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
+
 
 /**
  * =========================
