@@ -1,7 +1,7 @@
 const ProduitServiceClient = require('../services/listeproduitclient.service');
 
 // -------------------- LISTER LES PRODUITS --------------------
-exports.listerProduits = async () => {
+exports.listerProduitsClient = async () => {
   try {
     const produits = await Produit.find();
     
