@@ -7,9 +7,15 @@ class ProduitServiceClient {
   // -------------------- LISTER TOUS LES PRODUITS --------------------
   static async listerProduitsClient({ statut } = {}) {
     const whereClause = statut ? { statut } : {};
+
     const produits = await Produit.findAll({ where: whereClause });
-    return produits;
-  }
+
+    return produits.map(produit => ({
+      ...produit.toJSON(),
+      image: produit.image ? `/uploads/${produit.image}` : null
+    }));
+}
+
 
 // -------------------- COMMENDER UN PRODUIT --------------------
 static async commanderProduit(commandeData) {

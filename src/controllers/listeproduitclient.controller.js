@@ -1,24 +1,20 @@
 const ProduitServiceClient = require('../services/listeproduitclient.service');
 
 // -------------------- LISTER LES PRODUITS --------------------
-// -------------------- LISTER LES PRODUITS CLIENT --------------------
 exports.listerProduitsClient = async (req, res) => {
-  try {
-    const produits = await Produit.find();
+  const { statut } = req.query;
 
-    const produitsAvecImage = produits.map(produit => ({
-      ...produit.toObject(),
-      image: produit.image ? `/uploads/${produit.image}` : null
-    }));
+  try {
+    const produits = await ProduitServiceClient.listerProduitsClient({ statut });
 
     return res.status(200).json({
-      produits: produitsAvecImage
+      produits
     });
-  } catch (error) {
-    console.error('Erreur liste produits client:', error);
+  } catch (err) {
+    console.error('Erreur liste produits:', err);
     return res.status(500).json({
-      message: 'Erreur serveur',
-      erreur: error.message
+      message: 'Erreur serveur lors de la récupération des produits',
+      erreur: err.message
     });
   }
 };
