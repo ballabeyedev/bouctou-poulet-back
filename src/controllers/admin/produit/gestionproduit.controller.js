@@ -3,7 +3,7 @@ const ProduitService = require('../../../services/admin/produit/gestionproduit.s
 // -------------------- AJOUTER UN PRODUIT --------------------
 exports.ajouterProduit = async (req, res) => {
   const { nom, type, prix, stock, description } = req.body;
-  const image = req.file ? '/uploads/' + req.file.filename : null;
+  const image = req.file ? req.file.filename : null;
 
   try {
     const { produit, error } = await ProduitService.ajouterProduit({
